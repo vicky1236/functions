@@ -1,0 +1,35 @@
+
+resources:
+  repositories:
+  - repository: depotautomation
+    type: git
+    name: allubggowda/bgnew-automation
+    ref: refs/heads/main
+
+variables:
+  ComponentName: 'appioinments-api'
+  ProjectFolder: 'i18n.depot.api.appoinments'
+
+#warning: UTC time
+schedules:
+- cron: "0 10 * * *"
+  displayName: Daily Dev build
+  branches:
+    include:
+    - main
+  always: false  
+
+trigger:
+- main
+
+stages:
+  - stage: Build
+    jobs:
+    - template: templates/AzDo/build-dotnetcore.yaml@depotautomation
+    - template: templates/AzDo/build-terraform.yaml@depotautomation
+  - stage: Deploy
+    jobs:
+    - template: templates/AzDo/deploy-functions.yaml@depotautomation
+    
+
+   
